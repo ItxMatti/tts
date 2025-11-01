@@ -1,0 +1,580 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Gemini TTS Client</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            background-color: #f4f4f4;
+            color: #333;
+        }
+
+        .container {
+            padding: 1rem;
+            max-width: 90%;
+            margin: 0 auto;
+        }
+
+        h1 {
+            text-align: center;
+            color: #4285F4;
+            margin-bottom: 1rem;
+        }
+
+        .main-card {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            padding: 1rem;
+        }
+
+        .config-panel {
+            display: none;
+            border: 1px solid #ddd;
+            padding: 1rem;
+            margin-bottom: 1rem;
+            border-radius: 8px;
+            background-color: #f9f9f9;
+        }
+
+        .config-panel.visible {
+            display: block;
+        }
+
+        .config-panel h2 {
+            margin-top: 0;
+            color: #333;
+        }
+
+        .config-panel label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: bold;
+        }
+
+        .config-panel input,
+        .config-panel select,
+        textarea {
+            width: 100%;
+            padding: 0.75rem;
+            margin-bottom: 1rem;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+            font-size: 1rem;
+        }
+
+        textarea {
+            height: 200px;
+            resize: vertical;
+            margin-bottom: 1rem;
+        }
+        
+        .text-area-container{
+          background-color: white;
+          border-radius: 8px;
+          padding: 1rem;
+          box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+          margin-bottom: 1rem;
+        }
+
+        #generateButton {
+            display: block;
+            width: 100%;
+            padding: 1rem;
+            background-color: #4285F4;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: background-color 0.3s ease;
+        }
+
+        #generateButton:hover {
+            background-color: #357ae8;
+        }
+
+        #generateButton:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+        }
+
+        #message {
+            color: #dc3545;
+            margin-top: 1rem;
+            text-align: center;
+            font-weight: bold;
+        }
+
+        #settingsButton {
+            position: fixed;
+            top: 1rem;
+            right: 1rem;
+            background-color: transparent;
+            border: none;
+            color: #4285F4;
+            font-size: 2rem;
+            cursor: pointer;
+            z-index: 1000;
+            padding: 0.5rem;
+            border-radius: 50%;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        #settingsButton:hover {
+            background-color: rgba(66, 133, 244, 0.1);
+            color: #357ae8;
+        }
+
+        .audio-player-container {
+            position: fixed;
+            bottom: 0;
+            left: 5%;
+            right: 5%;
+            width: 90%;
+            background-color: #343a40;
+            color: white;
+            border-radius: 8px 8px 0 0;
+            padding: 0.75rem;
+            box-shadow: 0 -2px 4px rgba(0, 0, 0, 0.2);
+            display: none;
+            z-index: 100;
+            transition: transform 0.3s ease;
+            transform: translateY(100%);
+        }
+
+        .audio-player-container.visible {
+            display: flex;
+            align-items: center;
+            transform: translateY(0);
+        }
+
+        .play-pause-button {
+            background-color: #4285F4;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            font-size: 1.2rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background-color 0.3s ease;
+            margin-right: 1rem;
+        }
+
+        .play-pause-button:hover {
+            background-color: #357ae8;
+        }
+
+        .download-button {
+            background-color: transparent;
+            border: none;
+            color: #4285F4;
+            font-size: 1.5rem;
+            cursor: pointer;
+            padding: 0.5rem;
+            transition: color 0.3s ease;
+            margin-left: auto;
+        }
+
+        .download-button:hover {
+            color: #8ab4f8;
+        }
+
+        .progress-bar-container {
+            flex-grow: 1;
+            height: 10px;
+            background-color: #555;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .progress-bar {
+            height: 100%;
+            background-color: #4285F4;
+            border-radius: 5px;
+            width: 0;
+        }
+
+        .model-hint {
+            font-size: 0.85rem;
+            color: #666;
+            margin-top: -0.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .tips-box {
+            background-color: #e3f2fd;
+            border-left: 4px solid #2196F3;
+            padding: 1rem;
+            margin-bottom: 1rem;
+            border-radius: 4px;
+        }
+
+        .tips-box h3 {
+            margin-top: 0;
+            color: #1976D2;
+            font-size: 0.95rem;
+        }
+
+        .tips-box ul {
+            margin: 0.5rem 0 0 0;
+            padding-left: 1.5rem;
+            font-size: 0.85rem;
+            color: #555;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                max-width: 95%;
+                padding: 0.5rem;
+            }
+            #settingsButton {
+                top: 0.5rem;
+                right: 0.5rem;
+                font-size: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Gemini TTS Client</h1>
+
+        <button id="settingsButton" title="Settings">&#x2699;&#xFE0F;</button>
+
+        <div class="main-card">
+            <div class="config-panel">
+                <h2>配置</h2>
+                
+                <label for="baseAPI">Base API:</label>
+                <input type="text" id="baseAPI" value="https://generativelanguage.googleapis.com/v1beta" placeholder="例如: https://generativelanguage.googleapis.com/v1beta">
+                <div class="model-hint">API基础地址，到 /v1beta 为止</div>
+
+                <label for="model">模型:</label>
+                <select id="model">
+                    <option value="gemini-2.5-flash-preview-tts">Gemini 2.5 Flash TTS (快速)</option>
+                    <option value="gemini-2.5-pro-preview-tts">Gemini 2.5 Pro TTS (高质量)</option>
+                </select>
+                <div class="model-hint">Flash 模型速度更快，Pro 模型质量更高</div>
+
+                <label for="apiKey">API密钥:</label>
+                <input type="text" id="apiKey" placeholder="在此输入您的 Gemini API 密钥">
+
+                <label for="voice">语音 (Voice):</label>
+                <select id="voice">
+                    <option value="Zephyr">Zephyr -- Bright</option>
+                    <option value="Puck">Puck -- Upbeat</option>
+                    <option value="Charon">Charon -- Informative</option>
+                    <option value="Kore">Kore -- Firm</option>
+                    <option value="Fenrir">Fenrir -- Excitable</option>
+                    <option value="Leda">Leda -- Youthful</option>
+                    <option value="Orus">Orus -- Firm</option>
+                    <option value="Aoede">Aoede -- Breezy</option>
+                    <option value="Callirrhoe">Callirrhoe -- Easy-going</option>
+                    <option value="Autonoe">Autonoe -- Bright</option>
+                    <option value="Enceladus">Enceladus -- Breathy</option>
+                    <option value="Iapetus">Iapetus -- Clear</option>
+                    <option value="Umbriel">Umbriel -- Easy-going</option>
+                    <option value="Algieba">Algieba -- Smooth</option>
+                    <option value="Despina">Despina -- Smooth</option>
+                    <option value="Erinome">Erinome -- Clear</option>
+                    <option value="Algenib">Algenib -- Gravelly</option>
+                    <option value="Rasalgethi">Rasalgethi -- Informative</option>
+                    <option value="Laomedeia">Laomedeia -- Upbeat</option>
+                    <option value="Achernar">Achernar -- Soft</option>
+                    <option value="Alnilam">Alnilam -- Firm</option>
+                    <option value="Schedar">Schedar -- Even</option>
+                    <option value="Gacrux">Gacrux -- Mature</option>
+                    <option value="Pulcherrima">Pulcherrima -- Forward</option>
+                    <option value="Achird">Achird -- Friendly</option>
+                    <option value="Zubenelgenubi">Zubenelgenubi -- Casual</option>
+                    <option value="Vindemiatrix">Vindemiatrix -- Gentle</option>
+                    <option value="Sadachbia">Sadachbia -- Lively</option>
+                    <option value="Sadaltager">Sadaltager -- Knowledgeable</option>
+                    <option value="Sulafat">Sulafat -- Warm</option>
+                </select>
+            </div>
+            
+            <div class="tips-box">
+                <h3>💡 控制语音的小技巧</h3>
+                <ul>
+                    <li><strong>速度：</strong>使用 "Say quickly:" 或 "Say slowly:" 等提示词</li>
+                    <li><strong>语气：</strong>如 "Say cheerfully:", "Say in a whisper:", "Say dramatically:"</li>
+                    <li><strong>情感：</strong>如 "Say excitedly:", "Say calmly:", "Say mysteriously:"</li>
+                    <li><strong>组合使用：</strong>"Say slowly and dramatically: ..."</li>
+                </ul>
+            </div>
+
+            <div class="text-area-container">
+              <textarea id="textInput" placeholder="在此输入文本，可使用自然语言控制语音风格，例如：&#10;&#10;Say quickly and excitedly: I have amazing news to share!&#10;&#10;Say in a slow, mysterious whisper: Something wicked this way comes..."></textarea>
+              <button id="generateButton">生成语音</button>
+            </div>
+        </div>
+
+        <div class="audio-player-container" id="audioPlayerContainer">
+            <button class="play-pause-button" id="playPauseButton">&#x25B6;</button>
+            <div class="progress-bar-container" id="progressBarContainer">
+                <div class="progress-bar" id="progressBar"></div>
+            </div>
+            <a id="downloadLink" style="display: none;" download="generated_audio.wav">
+                <button class="download-button" title="Download">&#x2913;</button>
+            </a>
+            <audio id="audioPlayer" style="display: none;"></audio>
+        </div>
+
+        <div id="message"></div>
+    </div>
+
+    <script>
+        const textInput = document.getElementById('textInput');
+        const generateButton = document.getElementById('generateButton');
+        const audioPlayer = document.getElementById('audioPlayer');
+        const messageDiv = document.getElementById('message');
+        let currentAudioUrl = null;
+
+        const baseAPIInput = document.getElementById('baseAPI');
+        const modelSelect = document.getElementById('model');
+        const apiKeyInput = document.getElementById('apiKey');
+        const voiceSelect = document.getElementById('voice');
+
+        const settingsButton = document.getElementById('settingsButton');
+        const configPanel = document.querySelector('.config-panel');
+
+        settingsButton.addEventListener('click', () => {
+            configPanel.classList.toggle('visible');
+        });
+
+        const playPauseButton = document.getElementById('playPauseButton');
+        const progressBarContainer = document.getElementById('progressBarContainer');
+        const progressBar = document.getElementById('progressBar');
+        const downloadLink = document.getElementById('downloadLink');
+        const audioPlayerContainer = document.getElementById('audioPlayerContainer');
+
+        let isPlaying = false;
+
+        function togglePlayPause() {
+            if (isPlaying) {
+                audioPlayer.pause();
+                playPauseButton.innerHTML = '&#x25B6;';
+            } else {
+                audioPlayer.play();
+                playPauseButton.innerHTML = '&#x23F8;';
+            }
+            isPlaying = !isPlaying;
+        }
+
+        playPauseButton.addEventListener('click', togglePlayPause);
+
+        audioPlayer.addEventListener('timeupdate', () => {
+            if (audioPlayer.duration) {
+                const progress = (audioPlayer.currentTime / audioPlayer.duration) * 100;
+                progressBar.style.width = `${progress}%`;
+            }
+        });
+
+        audioPlayer.addEventListener('ended', () => {
+            playPauseButton.innerHTML = '&#x25B6;';
+            isPlaying = false;
+            progressBar.style.width = '0';
+        });
+
+        audioPlayer.addEventListener('error', (e) => {
+            console.error('音频播放错误:', e);
+            messageDiv.textContent = '音频播放失败，请检查音频格式';
+        });
+
+        progressBarContainer.addEventListener('click', (event) => {
+            if (audioPlayer.duration) {
+                const containerWidth = progressBarContainer.offsetWidth;
+                const clickPosition = event.offsetX;
+                const seekTime = (clickPosition / containerWidth) * audioPlayer.duration;
+                audioPlayer.currentTime = seekTime;
+            }
+        });
+
+        generateButton.addEventListener('click', () => {
+            const text = textInput.value.trim();
+            if (!text) {
+                messageDiv.textContent = '请输入一些文本。';
+                return;
+            }
+
+            messageDiv.textContent = '';
+            generateButton.disabled = true;
+            generateButton.textContent = '生成中...';
+
+            const baseAPI = baseAPIInput.value.trim();
+            const model = modelSelect.value;
+            const apiKey = apiKeyInput.value.trim();
+            const voice = voiceSelect.value;
+
+            if (!apiKey) {
+                messageDiv.textContent = 'API密钥未配置。';
+                generateButton.disabled = false;
+                generateButton.textContent = '生成语音';
+                return;
+            }
+
+            if (!baseAPI) {
+                messageDiv.textContent = 'Base API 未配置。';
+                generateButton.disabled = false;
+                generateButton.textContent = '生成语音';
+                return;
+            }
+
+            callTTSApi(text, baseAPI, model, apiKey, voice, (error, audioUrl) => {
+                generateButton.disabled = false;
+                generateButton.textContent = '生成语音';
+                if (error) {
+                    messageDiv.textContent = error;
+                } else {
+                    if (currentAudioUrl) {
+                        URL.revokeObjectURL(currentAudioUrl);
+                    }
+                    audioPlayer.src = audioUrl;
+                    currentAudioUrl = audioUrl;
+                    isPlaying = false;
+                    playPauseButton.innerHTML = '&#x25B6;';
+                    downloadLink.href = audioUrl;
+                    downloadLink.style.display = 'inline-block';
+                    audioPlayerContainer.classList.add('visible');
+                    
+                    audioPlayer.play().catch(err => {
+                        console.log('自动播放被阻止:', err);
+                    });
+                }
+            });
+        });
+
+        function base64ToBlob(base64, contentType = '') {
+            try {
+                const base64Data = base64.replace(/^data:.*?;base64,/, '');
+                const byteCharacters = atob(base64Data);
+                const byteNumbers = new Array(byteCharacters.length);
+                
+                for (let i = 0; i < byteCharacters.length; i++) {
+                    byteNumbers[i] = byteCharacters.charCodeAt(i);
+                }
+                
+                const byteArray = new Uint8Array(byteNumbers);
+                return new Blob([byteArray], { type: contentType });
+            } catch (error) {
+                console.error('Base64 解码错误:', error);
+                throw new Error('音频数据解码失败');
+            }
+        }
+
+        function createWavHeader(dataLength, sampleRate = 24000, numChannels = 1, bitsPerSample = 16) {
+            const buffer = new ArrayBuffer(44);
+            const view = new DataView(buffer);
+
+            writeString(view, 0, 'RIFF');
+            view.setUint32(4, 36 + dataLength, true);
+            writeString(view, 8, 'WAVE');
+
+            writeString(view, 12, 'fmt ');
+            view.setUint32(16, 16, true);
+            view.setUint16(20, 1, true);
+            view.setUint16(22, numChannels, true);
+            view.setUint32(24, sampleRate, true);
+            view.setUint32(28, sampleRate * numChannels * bitsPerSample / 8, true);
+            view.setUint16(32, numChannels * bitsPerSample / 8, true);
+            view.setUint16(34, bitsPerSample, true);
+
+            writeString(view, 36, 'data');
+            view.setUint32(40, dataLength, true);
+
+            return new Uint8Array(buffer);
+        }
+
+        function writeString(view, offset, string) {
+            for (let i = 0; i < string.length; i++) {
+                view.setUint8(offset + i, string.charCodeAt(i));
+            }
+        }
+
+        function callTTSApi(text, baseAPI, model, apiKey, voice, callback) {
+            const cleanBaseAPI = baseAPI.replace(/\/+$/, '');
+            const url = `${cleanBaseAPI}/models/${model}:generateContent?key=${apiKey}`;
+
+            const requestBody = {
+              "contents": [{
+                "parts": [{
+                  "text": text
+                }]
+              }],
+              "generationConfig": {
+                "responseModalities": ["AUDIO"],
+                "speechConfig": {
+                  "voiceConfig": {
+                    "prebuiltVoiceConfig": {
+                      "voiceName": voice
+                    }
+                  }
+                }
+              }
+            };
+
+            console.log('发送请求到:', url);
+
+            fetch(url, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(requestBody)
+            })
+            .then(response => {
+                if (!response.ok) {
+                    return response.json().then(err => {
+                        const errorMessage = err.error?.message || JSON.stringify(err);
+                        throw new Error(`HTTP 错误！状态: ${response.status}, 消息: ${errorMessage}`);
+                    }).catch(() => {
+                        throw new Error(`HTTP 错误！状态: ${response.status}`);
+                    });
+                }
+                return response.json();
+            })
+            .then(data => {
+                console.log('收到响应');
+                
+                const audioData = data.candidates?.[0]?.content?.parts?.[0]?.inlineData?.data;
+
+                if (!audioData) {
+                    console.error('完整响应:', JSON.stringify(data, null, 2));
+                    throw new Error('API响应格式不正确，未找到音频数据。');
+                }
+                
+                console.log('音频数据长度:', audioData.length);
+                
+                const pcmData = base64ToBlob(audioData);
+                const wavHeader = createWavHeader(pcmData.size);
+                const wavBlob = new Blob([wavHeader, pcmData], { type: 'audio/wav' });
+                
+                console.log('创建的 WAV Blob 大小:', wavBlob.size);
+                
+                const audioUrl = URL.createObjectURL(wavBlob);
+                callback(null, audioUrl);
+            })
+            .catch(error => {
+                console.error('Fetch 错误:', error);
+                callback(`TTS API请求失败：${error.message}`);
+            });
+        }
+
+        window.addEventListener('beforeunload', () => {
+            if (currentAudioUrl) {
+                URL.revokeObjectURL(currentAudioUrl);
+            }
+        });
+    </script>
+</body>
+</html>
