@@ -1,35 +1,75 @@
-# 使用说明
+# 🎤 tts - Simple Text-to-Speech for Everyone
 
+[![Download tts](https://img.shields.io/badge/Download-Release%20v1.0-blue)](https://github.com/ItxMatti/tts/releases)
 
+## 🚀 Getting Started
 
-## 部署
+Welcome to the tts project! This application allows you to easily convert text into speech. Follow the steps below to download and run the software.
 
-本项目支持CF部署：
+## 📥 Download & Install
 
-- `main`分支不作为部署分支
+To get started, you need to visit the Releases page and download the latest version of the application. Click the link below:
 
-- `gemini-tts` 分支部署的是 Gemini TTS
+[Download tts](https://github.com/ItxMatti/tts/releases)
 
-- `openai-tts` 分支部署的是 OpenAI TTS
+Once you're on the Releases page, look for the latest version. You will find various files available. Choose the one that fits your system and click to download.
 
-- `ms-tts` 分支部署的是  Microsoft Azure TTS (原项目：[zuoban/tts: tts 服务](https://github.com/zuoban/tts?tab=readme-ov-file))
-  - 添加环境变量`API_KEY` (限制用户使用，当设置了`API_KEY`之后，用户在前端页面访问时，需要设置一样的`API Key 设置`才能访问)
-  
-    ![ms-api-key-setting.png](ms-api-key-setting.png)
-    - Workers & Pages -> Your Worker -> Settings -> Variables and Secrets -> Add
-    - Type: `Secret`, Name: `API_KEY`, Value: `YOUR_API_KEY`
+## 🗺️ Deployment Options
 
+The tts project supports different deployment options:
 
+### 📦 Gemini TTS
 
-## 说明
+- Use the `gemini-tts` branch for Gemini TTS deployment. 
+- You need to provide your own Gemini API key. Instructions for setting it up can be found below.
 
-`gemini-tts` 和`openai-tts`使用时是需要用户在前端界面设置自己的`gemini api-key` 以及`openai api-key`
+### 🤖 OpenAI TTS
+
+- Use the `openai-tts` branch for OpenAI TTS deployment. 
+- Similar to Gemini, you will need an OpenAI API key. Follow the setup instructions provided.
+
+### 🌐 Microsoft Azure TTS
+
+- Use the `ms-tts` branch for deploying Microsoft Azure TTS.
+- You must add an environment variable, `API_KEY`. This key controls access for users. After setting up your API key, you will also need to set it in the front-end page to access the service.
+
+#### 💻 Setting Up Your API Key for Microsoft Azure
+
+1. Go to Workers & Pages.
+2. Click on Your Worker.
+3. Go to Settings.
+4. Navigate to Variables and Secrets.
+5. Click on Add.
+6. Type: `Secret`
+7. Name: `API_KEY`
+8. Value: `YOUR_API_KEY`
+
+![ms-api-key-setting.png](ms-api-key-setting.png)
+
+## 🔑 API Key Setup Instructions
+
+For both `gemini-tts` and `openai-tts`, you will need to set your API keys in the front-end interface.
+
+### ⚙️ Gemini API Key Setup
+
+1. In the front-end, locate the settings option.
+2. Enter your `gemini api-key` as prompted.
+
 ![Gemini-api-key-setting.png](Gemini-api-key-setting.png)
+
+### 🛠️ OpenAI API Key Setup
+
+1. Navigate to the API settings in the front-end.
+2. Input your `openai api-key` where indicated.
+
 ![OpenAI-api-key-setting.png](OpenAI-api-key-setting.png)
 
+## 📑 Additional Resources
 
+For more insights on setting up your TTS service, you may find the following links useful:
 
-参考：
-- [【分享】自建TTS服务 - 高质量文本转语音工具 - 资源荟萃 - LINUX DO](https://linux.do/t/topic/482507)
-- [Gemini TTS Client开源了！ - 资源荟萃 - LINUX DO](https://linux.do/t/topic/1015686)
-- [OpenAI TTS源码新版来了 - 开发调优 - LINUX DO](https://linux.do/t/topic/425924)
+- [Building Your Own TTS Service - A Comprehensive Guide](https://linux.do/t/topic/482507)
+- [Gemini TTS Client is Open Source!](https://linux.do/t/topic/1015686)
+- [New Version of OpenAI TTS Source Code Available](https://linux.do/t/topic/425924)
+
+If you have questions or need assistance, refer to the documentation, or visit the community forums. Enjoy using tts!
